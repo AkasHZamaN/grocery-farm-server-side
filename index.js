@@ -44,6 +44,7 @@ async function run() {
             const result = await productCollection.insertOne(newProduct);
             res.send(result);
         });
+        
 
         // delete api
         app.delete('/product/:id', async (req, res)=>{
