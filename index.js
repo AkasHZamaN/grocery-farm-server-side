@@ -44,7 +44,34 @@ async function run() {
             const result = await productCollection.insertOne(newProduct);
             res.send(result);
         });
-        
+        // update quantity increasing of reStock
+        app.put('/product/:id', async(req, res)=>{
+            const id = req.params.id;
+            const reStockQuantity = req.body;
+            const filter = {_id: ObjectId(id)};
+            const options = {upsert: true};
+            const addQuantity = {
+                $set: reStockQuantity
+            }
+            const result = await productCollection.updateOne(filter, addQuantity, options);
+            res.send(result);
+        })
+
+
+
+        // update quantity deacreasing
+        app.put('/product/:id', async(req, res)=>{
+            const id = req.params.id;
+            const updateQuantity = req.body;
+            const filter = {_id: ObjectId(id)};
+            const options = { upsert: true };
+            const decreaseDoc = {
+                $set: updateQuantity
+            }
+            const result = await productCollection.updateOne(filter, decreaseDoc, options);
+            res.send(result);
+
+        })
 
         // delete api
         app.delete('/product/:id', async (req, res)=>{
