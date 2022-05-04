@@ -21,6 +21,7 @@ async function run() {
     try{
         await client.connect();
         const productCollection = client.db('groceryProduct').collection('product');
+        const orderCollection = client.db('groceryProduct').collection('order');
 
         // get product in the database
         app.get('/product', async(req, res)=>{
@@ -80,6 +81,15 @@ async function run() {
             const result = await productCollection.deleteOne(query);
             res.send(result);
         });
+        
+        // Order collection API
+        app.post('/order', async(req, res)=>{
+            const order = req.body;
+            const result = await orderCollection.insertOne(order);
+            res.send(result);
+        })
+
+
     }
     finally{
         //write something new
