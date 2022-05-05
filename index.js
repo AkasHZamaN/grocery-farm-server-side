@@ -1,4 +1,5 @@
 const express = require('express');
+const jwt = require('jsonwebtoken');
 const { MongoClient, ServerApiVersion, ObjectId } = require('mongodb');
 const cors = require('cors');
 require('dotenv').config();
@@ -22,6 +23,17 @@ async function run() {
         await client.connect();
         const productCollection = client.db('groceryProduct').collection('product');
         const orderCollection = client.db('groceryProduct').collection('order');
+
+        // access token api
+        app.post('/login', async (req, res)=>{
+            const user = req.body;
+            const accessToken = jwt.sign(user, process.env.ACCESS_TOKEN_SECRET, {
+                expiresIn: '1d'
+            });
+            res.send({accessToken});
+        })
+
+
 
         // get product in the database
         app.get('/product', async(req, res)=>{
@@ -85,7 +97,6 @@ async function run() {
         // Order collection API
         app.get('/order', async(req, res)=>{
             const email = req.query.email;
-            console.log(email)
             const query = {email: email};
             const cursor = orderCollection.find(query);
             const orders = await cursor.toArray();
