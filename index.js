@@ -51,7 +51,7 @@ async function run() {
 
 
         // get product in the database
-        app.get('/product', async(req, res)=>{
+        app.get('/product', async (req, res)=>{
             const query = {};
             const cursor = productCollection.find(query);
             const products = await cursor.toArray();
@@ -109,7 +109,15 @@ async function run() {
             res.send(result);
         });
         
-        // Order collection API
+        // Order collection API by using email query search
+        // app.get('/order',  async(req, res)=>{
+        //         const email = req.query.email;
+        //         const query = {email: email};
+        //         const cursor = orderCollection.find(query);
+        //         const orders = await cursor.toArray();
+        //         res.send(orders);    
+        // })
+
         app.get('/order', verifyJWT, async(req, res)=>{
             const decodedEmail = req.decoded.email;
             const email = req.query.email;
@@ -126,9 +134,30 @@ async function run() {
             
         })
 
+        // order delete api
+        app.delete('/order/:id', async (req, res)=>{
+            const id = req.params.id;
+            const query = {_id: ObjectId(id)};
+            const cursor = orderCollection.find(query);
+            const result = await cursor.toArray();
+            res.send(result);
+        })
+
+        // get single order api
+        app.get('/order/:id', async (req, res)=>{
+            const id = req.params.id;
+            const query = {_id: ObjectId(id)};
+            const cursor = orderCollection.find(query);
+            const product = await cursor.toArray();
+            res.send(product)
+        })
+
+
+        // order product insert api
         app.post('/order', async(req, res)=>{
             const order = req.body;
             const result = await orderCollection.insertOne(order);
+            console.log(result);
             res.send(result);
         })
 
