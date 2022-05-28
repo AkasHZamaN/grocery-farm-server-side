@@ -110,29 +110,29 @@ async function run() {
         });
         
         // Order collection API by using email query search
-        // app.get('/order',  async(req, res)=>{
-        //         const email = req.query.email;
-        //         const query = {email: email};
-        //         const cursor = orderCollection.find(query);
-        //         const orders = await cursor.toArray();
-        //         res.send(orders);    
-        // })
-
-        app.get('/order', verifyJWT, async(req, res)=>{
-            const decodedEmail = req.decoded.email;
-            const email = req.query.email;
-            if(email === decodedEmail){
+        app.get('/order',  async(req, res)=>{
+                const email = req.query.email;
                 const query = {email: email};
                 const cursor = orderCollection.find(query);
                 const orders = await cursor.toArray();
-                res.send(orders);
-            }
-            else{
-                res.status(403).send({message: 'Forbidden Access'})
-            }
-            
-            
+                res.send(orders);    
         })
+
+        // app.get('/order', verifyJWT, async(req, res)=>{
+        //     const decodedEmail = req.decoded.email;
+        //     const email = req.query.email;
+        //     if(email === decodedEmail){
+        //         const query = {email: email};
+        //         const cursor = orderCollection.find(query);
+        //         const orders = await cursor.toArray();
+        //         res.send(orders);
+        //     }
+        //     else{
+        //         res.status(403).send({message: 'Forbidden Access'})
+        //     }
+            
+            
+        // })
 
         // order delete api
         app.delete('/order/:id', async (req, res)=>{
